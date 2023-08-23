@@ -16,6 +16,24 @@ Beyond this you will just need to know the following:
 3: What port is being used for ssh
 4: Where your ssh key is stored
 
+### Generating SSH Key Pair
+
+We need to generate a ssh key pair so we can connect the two machines for ssh access for the sftp script to work simpler. This can be done with the below commands.
+
+    ssh-keygen -t rsa
+
+This generates the keys, you can use a passphrase if you want to but is not needed unless you have a public facing machine. Take note of the directory that the keys are being stored, it’ll be needed for later on.
+
+Now we need to send the key to the remote machine and this will be done with the below command:
+
+    ssh-copy-id user@machine_b_ip
+
+Put a root user for user and the public ip for machine_b-ip
+
+It will ask if the ssh signature is correct and then it will pass they key and you can now ssh into the second machine from machine a without a password. You can test it with the below command.
+
+    ssh user@machine_b_ip
+    
 ### Setting up the script
 
 In a directory of your choice (mine is in the /home/your user directory) make a file and name it backup.sh
