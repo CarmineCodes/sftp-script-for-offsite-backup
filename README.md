@@ -1,32 +1,63 @@
-# Project Title
+# USING SFTP FOR OFFSITE BACKUPS
 
-One Paragraph of the project description
-
-Initially appeared on
-[gist](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2). But the page cannot open anymore so that is why I have moved it here.
+Having backups is important but redundant backups are even more important in case of a horrible situation. By using ssh-keys, sftp and cron jobs with this script we can automate moving out backup files to a vps to have additional backups in case we lose a local one by chance.
 
 ## Getting Started
 
-These instructions will give you a copy of the project up and running on
-your local machine for development and testing purposes. See deployment
-for notes on deploying the project on a live system.
+To get started we will need a few things:
+1: A VPS or other accessible share that we can sftp to
+2: Local backups on the network
+3: Patience
+4: Ssh-keys in place
 
-### Prerequisites
+Beyond this you will just need to know the following:
+1: The source directories with the backup files
+2: The destination directory to send the files to
+3: What port is being used for ssh
+4: Where your ssh key is stored
 
-Requirements for the software and other tools to build, test and push 
-- [Example 1](https://www.example.com)
-- [Example 2](https://www.example.com)
+### Setting up the script
 
-### Installing
+In a directory of your choice (mine is in the /home/your user directory) make a file and name is 
 
-A step by step series of examples that tell you how to get a development
-environment running
+    #!/bin/bash
 
-Say what the step will be
+    # Set source directory
+    SOURCE_DIR="/path/to/source"
 
-    Give the example
+    # Set SFTP connection details
+    SFTP_USER="your_username"
+    SFTP_HOST="machine_b_ip"
+    SFTP_PORT="your_sftp_port"
+    SSH_PRIVATE_KEY="/path/to/ssh/private/key"
 
-And repeat
+    # Set remote destination directory on Machine B
+    DEST_DIR="/path/to/remote/destination"
+
+    # Create a folder named with the current date
+    BACKUP_FOLDER="$(date +\%Y\%m\%d)"
+    REMOTE_BACKUP_DIR="$DEST_DIR/$BACKUP_FOLDER"
+
+    # SFTP command
+    sftp_command="sftp -i $SSH_PRIVATE_KEY -oPort=$SFTP_PORT $SFTP_USER@$SFTP_HOST"
+
+    # Create the remote backup folder
+    $sftp_command <<EOF
+    mkdir "$REMOTE_BACKUP_DIR"
+    quit
+    EOF
+
+    # Transfer all files from source to remote backup folder
+    for file in "$SOURCE_DIR"/*; do
+    if [[ -f "$file" ]]; then
+        $sftp_command <<EOF
+        put "$file" "$REMOTE_BACKUP_DIR/"
+        EOF
+    fi
+    done
+
+
+From there, copy the below script into it and fill in your information to match
 
     until finished
 
