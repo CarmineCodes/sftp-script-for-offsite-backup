@@ -18,7 +18,9 @@ Beyond this you will just need to know the following:
 
 ### Setting up the script
 
-In a directory of your choice (mine is in the /home/your user directory) make a file and name is 
+In a directory of your choice (mine is in the /home/your user directory) make a file and name it backup.sh
+
+when using the below script, make sure to fill in your information for SOURCE_DIR, SFTP_USER, SFTP_HOST, SFTP_PORT, SSH_PRIVATE_KEY, DEST_DIR, 
 
     #!/bin/bash
 
@@ -52,73 +54,34 @@ In a directory of your choice (mine is in the /home/your user directory) make a 
     if [[ -f "$file" ]]; then
         $sftp_command <<EOF
         put "$file" "$REMOTE_BACKUP_DIR/"
-        EOF
+    EOF
     fi
     done
 
 
-From there, copy the below script into it and fill in your information to match
+Now that we have our script we need to make it executable
 
-    until finished
+    sudo chmod +x /backup.sh
 
-End with an example of getting some data out of the system or using it
-for a little demo
+Now the script is executable, and we can run it to test to see if it works properly. If your source directory has a lot of data in it, it will take a while to finish moving the data so be prepared, maybe start with a simple test file to ensure your script is working how you want before you try to copy all your backups.
 
-## Running the tests
+Now we are ready to run our script with:
 
-Explain how to run the automated tests for this system
+        sudo ./backup.sh
+        
+### Writing the Cron Job
 
-### Sample Tests
+To take our script and make it run automatically we need to use a cron job. This will make it so the script will run on a schedule we set and move the files to our backup location without us having to.
 
-Explain what these tests test and why
+We need to open the crontab with the below command so we can modify it to run our new script
 
-    Give an example
+    crontab -e
 
-### Style test
+Then select option one to use nano
 
-Checks if the best practices and the right coding style has been used.
+Using the following base format, it can be modified based on when you want the sftp job to run and then have the patch to your backup.sh script in it.
 
-    Give an example
+    0 0 * * * /path/to/backup.sh
 
-## Deployment
+Now our backup script is written and with the use of cron jobs will automatically move the backup files over to our new share to keep them safe.
 
-Add additional notes to deploy this on a live system
-
-## Built With
-
-  - [Contributor Covenant](https://www.contributor-covenant.org/) - Used
-    for the Code of Conduct
-  - [Creative Commons](https://creativecommons.org/) - Used to choose
-    the license
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
-of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [Semantic Versioning](http://semver.org/) for versioning. For the versions
-available, see the [tags on this
-repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
-
-## Authors
-
-  - **Billie Thompson** - *Provided README Template* -
-    [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of
-[contributors](https://github.com/PurpleBooth/a-good-readme-template/contributors)
-who participated in this project.
-
-## License
-
-This project is licensed under the [CC0 1.0 Universal](LICENSE.md)
-Creative Commons License - see the [LICENSE.md](LICENSE.md) file for
-details
-
-## Acknowledgments
-
-  - Hat tip to anyone whose code is used
-  - Inspiration
-  - etc
