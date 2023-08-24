@@ -5,15 +5,23 @@ Having backups is important but redundant backups are even more important in cas
 ## Getting Started
 
 To get started we will need a few things:
+
 1: A VPS or other accessible share that we can sftp to
+
 2: Local backups on the network
+
 3: Patience
+
 4: Ssh-keys in place
 
 Beyond this you will just need to know the following:
+
 1: The source directories with the backup files
+
 2: The destination directory to send the files to
+
 3: What port is being used for ssh
+
 4: Where your ssh key is stored
 
 ### Generating SSH Key Pair
